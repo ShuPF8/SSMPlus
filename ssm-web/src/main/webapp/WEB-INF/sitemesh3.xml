@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+	<!--统一装饰的界面-->
+	<mapping path="/dec/*" decorator="/WEB-INF/jsp/decorator/decorator.jsp"/>
+	<!--统一不装饰的界面-->
+	<!--<mapping path="/login" exclue="true"/>-->
+	<!--<mapping path="/logout" exclue="true"/>-->
+	<!--<mapping path="/index.jsp" exclue="true"/>-->
+	<!--<mapping path="*404.jsp*" exclue="true"/>-->
+	<!--<mapping path="*error.jsp*" exclue="true"/>-->
+	<!--<mapping path="*/igdec/*" exclue="true"/>-->
+	<!--<mapping path="*/com/com*" exclue="true"/>-->
+
+
+</sitemesh>

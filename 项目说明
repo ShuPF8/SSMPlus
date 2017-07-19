@@ -1,0 +1,52 @@
+spring MVC项目搭建及一些常用功能集合：
+
+1.邮件的发送：
+    需要导入mail.jar包
+    注意：需要删除javaee包中的mail包，避免冲突，邮件发送不成功
+
+2.sitemesh3：
+    jsp装饰：母页面引用子页面 需要配置web.xml的sitemesh的拦截器
+    和sitemesh xml文件
+
+3.mybaties 自动生成sql文件 entity实体  mapper映射类
+    需要导入 generator-1.3.2.jar，配置generator配置文件
+    提示：
+        如要修改Mapper映射文件中的方法名就修改 源文件 IntrospectedTable 类中 calculateXmlAttributes 方法
+        修改映射文件命名 修改 IntrospectedTable 类中 calculateJavaClientAttributes 方法
+        修改实体文件命名 修改 IntrospectedTable 类中 calculateJavaModelPackage  方法
+
+4.redis 缓存
+    封装了一些增删查等缓存接口
+    注意：本项目用缓存的地方，使用时都需要先在本地启动windouws 的redis服务器
+          windouws redis服务器需要自己安装
+
+5.spring MVC 拦截器的使用
+
+6.使用json返回到前端
+    BaseUtils 中的toJSONString方法：将数据转化为json对象
+                  backClient 将数据返回给前端
+
+7.psring MVC加载静态资源：
+    需要配置web.xml或者在pring-mvc.xml中配置
+
+8.java实现execl导出
+
+9.spring MVC直接执行sql语句:
+     相关接口封装在SqlTemplate工具类中
+
+10.spring quartz 定时器动态添加与删除 QuartzManager类
+
+11.微信接入接口工具类 WeiXinUtils
+
+12.接口签名验证（前端传入一个sign签名，后端在对request参数进行加密生产sign，两者相比较）
+
+13.LoadingCache 本地缓存
+
+14.HTTP(okhttp3)远程请求
+
+15.DAF算法实现敏感词替换 (在utils.dfa包中)
+
+16.集成 Mybatis-plus
+
+
+

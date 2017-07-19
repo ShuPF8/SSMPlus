@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- jedis 连接池配置参数：  -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!--<property name="maxActive" value="100"></property>-->
+        <property name="maxIdle" value="25"></property>
+        <property name="maxWaitMillis" value="15000"></property>
+        <property name="testOnBorrow" value="false"></property>
+        <property name="testOnReturn" value="false"></property>
+    </bean>
+    <!-- jedis 连接池  连接本地redis服务 构造器注入-->
+    <bean id="pool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg index="0"  ref="poolConfig"/>
+        <constructor-arg index="1" value="localhost"/>
+        <constructor-arg index="2" value="6379"/>
+        <constructor-arg index="3" value="2000"/>
+    </bean>
+    <!--&lt;!&ndash; cleint&ndash;&gt;
+    <bean id="redisClient" class="com.utils.redis.RedisClient">
+        <property name="pool" ref="pool"/>
+    </bean>
+
+    &lt;!&ndash; storge Cache 存储器&ndash;&gt;
+    <bean id="storageCache" class="com.utils.redis.RedisCacheStorageImpl">
+        <property name="redisClient" ref="redisClient" />
+    </bean>-->
+</beans>
