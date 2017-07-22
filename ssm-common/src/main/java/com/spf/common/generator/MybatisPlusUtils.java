@@ -64,10 +64,16 @@ public class MybatisPlusUtils {
                 return super.processTypeConvert(fieldType);
             }
         });
-        dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("root");
-        dsc.setUrl("jdbc:mysql:///test?characterEncoding=utf8");
+        PropertiesUtils propertiesUtils = PropertiesUtils.getInstance();
+        String url = propertiesUtils.getString("jdbc.url").toString();
+        String name = propertiesUtils.getString("jdbc.username").toString();
+        String pwd = propertiesUtils.getString("jdbc.password").toString();
+        String driver = propertiesUtils.getString("jdbc.driver").toString();
+
+        dsc.setDriverName(driver);
+        dsc.setUsername(name);
+        dsc.setPassword(pwd);
+        dsc.setUrl(url);
         mpg.setDataSource(dsc);
 
         // 策略配置
