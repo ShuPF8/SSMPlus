@@ -8,6 +8,7 @@
 
 # Package Files #
 *.jar
+*.log
 *.war
 *.ear
 *.idea
