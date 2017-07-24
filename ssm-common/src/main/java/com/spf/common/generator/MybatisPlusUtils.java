@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.DbType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.spf.common.BaseUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,17 +21,17 @@ import java.util.Map;
  * @Auther ShuPF
  * @Create 2017/7/5 0005
  */
-
-public class MybatisPlusUtils {
+@Slf4j
+public class MybatisPlusUtils{
 
     public static void main(String[] args) {
         String[] models = {"ssm-mapper","ssm-model","ssm-service","ssm-web"};
         for (String model : models) {
-            shell(model);
+            shell(model,"user");
         }
     }
 
-    private static void shell(String model){
+    private static void shell(String model, String tabName){
         File file = new File(model);
         String path = file.getAbsolutePath();
         //path = path.substring(0, path.lastIndexOf(File.separator));
@@ -45,11 +47,11 @@ public class MybatisPlusUtils {
         gc.setAuthor("ShuPF");
 
         // 自定义文件命名，注意 %s 会自动填充表实体属性！
-        gc.setMapperName("%sMapper");
-        gc.setXmlName("%sMapper");
+        gc.setMapperName("I%sMapper");
+        gc.setXmlName("I%sMapper");
         gc.setServiceName("I%sService");
         gc.setServiceImplName("I%sServiceImpl");
-        gc.setControllerName("%sController");
+        gc.setControllerName("I%sController");
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -64,10 +66,17 @@ public class MybatisPlusUtils {
                 return super.processTypeConvert(fieldType);
             }
         });
-        dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("root");
-        dsc.setUrl("jdbc:mysql:///test?characterEncoding=utf8");
+
+        PropertiesUtils propertiesUtils = PropertiesUtils.getInstance();
+        String url = propertiesUtils.getString("jdbc.url").toString();
+        String name = propertiesUtils.getString("jdbc.username").toString();
+        String pwd = propertiesUtils.getString("jdbc.password").toString();
+        String driver = propertiesUtils.getString("jdbc.driver").toString();
+
+        dsc.setDriverName(driver);
+        dsc.setUsername(name);
+        dsc.setPassword(pwd);
+        dsc.setUrl(url);
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -75,7 +84,7 @@ public class MybatisPlusUtils {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         strategy.setTablePrefix(new String[] { "tlog_", "tsys_" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] { "user_info" }); // 需要生成的表
+        strategy.setInclude(new String[] {tabName}); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         //strategy.setSuperEntityClass("com.spf.model.Entity");
@@ -140,31 +149,20 @@ public class MybatisPlusUtils {
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
 
-        // 关闭默认 xml 生成，调整生成 至 根目录
-        TemplateConfig tc = new TemplateConfig();
-        if ("ssm-mapper".equals(model)) {
-            tc.setController(null);
-            tc.setEntity(null);
-            tc.setService(null);
-            tc.setServiceImpl(null);
-        } else if ("ssm-model".equals(model)) {
-            tc.setController(null);
-            tc.setService(null);
-            tc.setServiceImpl(null);
-            tc.setMapper(null);
-            tc.setXml(null);
-        }  else if ("ssm-service".equals(model)) {
-            tc.setController(null);
-            tc.setMapper(null);
-            tc.setXml(null);
-            tc.setEntity(null);
-        } else if ("ssm-web".equals(model)) {
-            tc.setMapper(null);
-            tc.setXml(null);
-            tc.setService(null);
-            tc.setServiceImpl(null);
-            tc.setEntity(null);
+        //多模块
+        TemplateConfig tc = getTemplateConfig(gc,pc,model,tabName, false);
+        if (tc.getMapper() == null && tc.getXml() == null && tc.getService() == null &&
+                tc.getServiceImpl() == null && tc.getController() == null && tc.getEntity() == null) {
+            return;
         }
+        // 关闭默认 xml 生成，调整生成 至 根目录（单模块）
+//        TemplateConfig tc = new TemplateConfig();
+//		tc.setController("java.com.SpringBoot.ibats.controller");
+//		tc.setEntity("java.com.SpringBoot.ibats.model.Entity");
+//		 tc.setMapper("java.com.SpringBoot.ibats.mapper");
+//		 tc.setXml("src.resources.sqlBaties");
+//		 tc.setService("java.com.SpringBoot.ibats.service");
+//		 tc.setServiceImpl("java.com.SpringBoot.ibats.service.impl");
         mpg.setTemplate(tc);
 
         // 自定义模板配置，可以 copy 源码 mybatis-plus/src/main/resources/template 下面内容修改，
@@ -181,9 +179,122 @@ public class MybatisPlusUtils {
 
         // 执行生成
         mpg.execute();
-
         // 打印注入设置【可无】
         System.err.println(mpg.getCfg().getMap().get("abc"));
+    }
+
+    /**
+     * 控制包生成的路径与是否覆盖生成
+     * @param gc // 全局配置
+     * @param pc 包配置
+     * @param model model名
+     * @param tabName 表名
+     * @param isCover 是否覆盖生成代码
+     * @return TemplateConfig
+     */
+    private static TemplateConfig getTemplateConfig(GlobalConfig gc,  PackageConfig pc, String model, String tabName, boolean isCover) {
+        TemplateConfig tc = new TemplateConfig();
+        String entity = BaseUtils.getName(tabName,"_");
+        String path = model + "/src/main/java/" +replace( pc.getParent());
+        if (!isCover) {
+            if ("ssm-mapper".equals(model)) {
+                String mapperPath =path + "/" + replace(pc.getMapper()) + "/" + gc.getMapperName().replace("%s",entity) + ".java";
+                if (isExists(mapperPath)) {
+                    tc.setMapper(null);
+                    log.info(gc.getMapperName().replace("%s",entity) + ".java 文件已存在");
+                }
+                String mapperXmlPath =path + "/" + replace(pc.getXml()) + "/" + gc.getXmlName().replace("%s",entity) + ".xml";
+                if (isExists(mapperXmlPath)) {
+                    tc.setXml(null);
+                    log.info(gc.getXmlName().replace("%s",entity) + ".xml 文件已存在");
+                }
+                tc.setController(null);
+                tc.setEntity(null);
+                tc.setService(null);
+                tc.setServiceImpl(null);
+            } else if ("ssm-model".equals(model)) {
+                String modelPath = path + "/" + replace(pc.getEntity()) + "/" + entity + ".java";
+                if (isExists(modelPath)) {
+                    tc.setEntity(null);
+                    log.info(entity + ".java 文件已存在");
+                }
+                tc.setController(null);
+                tc.setService(null);
+                tc.setServiceImpl(null);
+                tc.setMapper(null);
+                tc.setXml(null);
+            }  else if ("ssm-service".equals(model)) {
+                String servicePath = path + "/" +replace(pc.getService()) + "/" +  gc.getServiceName().replace("%s",entity) + ".java";
+                if (isExists(servicePath)) {
+                    tc.setService(null);
+                    log.info(gc.getServiceName().replace("%s",entity) + ".java 文件已存在");
+                }
+                String serviceImplPath = path + "/" +replace(pc.getServiceImpl()) + "/" +  gc.getServiceImplName().replace("%s",entity) + ".java";
+                if (isExists(serviceImplPath)) {
+                    tc.setServiceImpl(null);
+                    log.info(gc.getServiceImplName().replace("%s",entity) + ".java 文件已存在");
+                }
+                tc.setController(null);
+                tc.setMapper(null);
+                tc.setXml(null);
+                tc.setEntity(null);
+            } else if ("ssm-web".equals(model)) {
+                String controllerPath = path + "/" +replace(pc.getController()) + "/" + gc.getControllerName().replace("%s",entity) + ".java";;
+                if (isExists(controllerPath)) {
+                    tc.setController(null);
+                    log.info(gc.getControllerName().replace("%s",entity) + ".java 文件已存在");
+                }
+                tc.setMapper(null);
+                tc.setXml(null);
+                tc.setService(null);
+                tc.setServiceImpl(null);
+                tc.setEntity(null);
+            }
+        } else {
+            if ("ssm-mapper".equals(model)) {
+                tc.setController(null);
+                tc.setEntity(null);
+                tc.setService(null);
+                tc.setServiceImpl(null);
+            } else if ("ssm-model".equals(model)) {
+                tc.setController(null);
+                tc.setService(null);
+                tc.setServiceImpl(null);
+                tc.setMapper(null);
+                tc.setXml(null);
+            }  else if ("ssm-service".equals(model)) {
+                tc.setController(null);
+                tc.setMapper(null);
+                tc.setXml(null);
+                tc.setEntity(null);
+            } else if ("ssm-web".equals(model)) {
+                tc.setMapper(null);
+                tc.setXml(null);
+                tc.setService(null);
+                tc.setServiceImpl(null);
+                tc.setEntity(null);
+            }
+        }
+        return tc;
+    }
+
+    /**
+     * 判断文件是否存在
+     * @param path 路径
+     * @return
+     */
+    private static boolean isExists(String path) {
+        File file = new File(path);
+        return file.exists();
+    }
+
+    /**
+     * 将点替换为斜杠
+     * @param name
+     * @return
+     */
+    private static String replace(String name) {
+        return name.replace(".","/");
     }
 
 }
