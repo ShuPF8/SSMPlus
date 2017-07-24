@@ -2,11 +2,14 @@ package com.spf.common.arithmetic;
 
 
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA
@@ -97,15 +100,14 @@ public class AES {
     }
 
    public static void main(String[] args) throws UnsupportedEncodingException {
-       String key = "abcdefgabcdefg12";
-        String data = "我爱你";
-        //byte [] a = key.getBytes("UTF-8");
-       //System.out.println(a.length);
-      // String s2 = "fOz76GnwQ7cG76QrPj+7+pY6IW0XmaHp0VutFEQSbyk=";
-        String  r = encryptToBase64(data,key);
-       String j = decryptFromBase64(r,key);
-      System.out.println(r);
-      System.out.println(j);
+       Map<String,String> requestMap = Maps.newHashMap();
+       requestMap.put("order_no","556561561655");
+       requestMap.put("order_status","2000");
+       requestMap.put("member_id","12345");
+       requestMap.put("trade_no","12359654782");
+       requestMap.put("total_fee","12155");
+       String str = AES.encryptToBase64(JSON.toJSONString(requestMap),"4bbd85de4bbd85de");
+       System.out.println(str);
     }
 
 }
