@@ -1,64 +1,80 @@
 package com.spf.common.httpClientUtils;
 
-import okhttp3.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author SPF
  * @Date 2017/5/25
  */
-@Component("httpClientUtils")
 public class HttpClientUtils {
-    private MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
-
-    protected final OkHttpClient okHttpClient = new OkHttpClient().newBuilder().connectTimeout(5, TimeUnit.MINUTES)
-            .readTimeout(10, TimeUnit.MINUTES)
-            .build();
-
-    public String doPostJson(String url,String jsonStr) throws IOException {
-        RequestBody requestBody = FormBody.create(mediaType,jsonStr);
-        return post(url,requestBody);
-    }
-
-    public String doPost(String url, Map<String,String> paramsMap) throws IOException {
-        FormBody.Builder formBody = new FormBody.Builder();
-        for (Map.Entry<String,String> map : paramsMap.entrySet()) {
-            formBody.addEncoded(map.getKey(),map.getValue());
-        }
-        return post(url,formBody.build());
-    }
-
-    protected String post(String url, RequestBody requestBody) throws IOException {
-
+    public static String post(String url, Map<String, Object> map) {
+        CloseableHttpClient client =null;
+        HttpPost post = null;
+        CloseableHttpResponse response = null;
+        String result = null;
         try {
+            client = HttpClients.createDefault();
+            post = new HttpPost(url);
 
-            Request request = new Request.Builder()
-                    .url(url).post(requestBody)
+            //设置超时时间
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(3000) //设置链接超时时间
+                    .setSocketTimeout(1000)//设置读取超时时间
                     .build();
-            Response response = okHttpClient.newCall(request).execute();
+            post.setConfig(requestConfig);
 
-            String responseStr = response.body().string();
+            //设置请求头信息，模拟浏览器请求
+            post.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36");
 
-            logger.debug("返回 Response：" + responseStr);
-
-            return responseStr;
-        } catch (ConnectException ex) {
-            logger.error("连接超时",ex);
-            throw new RuntimeException("连接超时");
+            //设置参数
+            if(map != null && !map.isEmpty()) {
+                List<NameValuePair> list = new ArrayList<NameValuePair>();
+                Iterator iterator = map.entrySet().iterator();
+                while(iterator.hasNext()){
+                    Map.Entry<String,Object> elem = (Map.Entry<String, Object>) iterator.next();
+                    list.add(new BasicNameValuePair(elem.getKey(),elem.getValue().toString()));
+                }
+                if(list.size() > 0){
+                    UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list,"UTF-8");
+                    post.setEntity(entity);
+                }
+            }
+            //执行请求
+            response = client.execute(post);
+            if(response != null){
+                HttpEntity resEntity = response.getEntity();
+                if(resEntity != null){
+                    result = EntityUtils.toString(resEntity,"UTF-8");
+                }
+            }
         } catch (Exception e) {
-            logger.error("发起请求失败",e.getMessage());
-            throw new RuntimeException("发起请求失败");
+            e.printStackTrace();
+        } finally {
+            try {
+                client.close();
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
+        return result;
     }
 
 }

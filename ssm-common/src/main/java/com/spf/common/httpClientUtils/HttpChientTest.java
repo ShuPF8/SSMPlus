@@ -18,9 +18,9 @@ public class HttpChientTest {
     @Test
     public void test() throws IOException {
         HttpClientUtils httpClientUtils = new HttpClientUtils();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
 
-        String response = httpClientUtils.doPost("http://localhost:9966/testfindAll", map);
+        String response = httpClientUtils.post("http://localhost:9404/findAll", map);
         System.out.println(response);
     }
 }
