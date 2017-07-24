@@ -21,4 +21,6 @@ public interface ISfUserService extends IService<SfUser> {
 
     BizResult< List<SfUser>> findAll();
 
+    BizResult<SfUser> findByID(String id);
+
 }

@@ -42,4 +42,12 @@ public class ISfUserServiceImpl extends ServiceImpl<SfUserMapper, SfUser> implem
         result.setData(list);
         return result;
     }
+
+    public BizResult<SfUser> findByID(String id) {
+        BizResult<SfUser> result= new BizResult<SfUser>();
+        SfUser sfUser = baseMapper.selectById(id);
+        result.setData(sfUser);
+        result.setSuccess();
+        return result;
+    }
 }

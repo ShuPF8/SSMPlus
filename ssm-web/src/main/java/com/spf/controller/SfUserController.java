@@ -8,6 +8,7 @@ import com.spf.common.result.BizResult;
 import com.spf.entity.SfUser;
 import com.spf.service.ISfUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,17 @@ public class SfUserController extends BaseUtils {
         s.setPhone("561565646556");
         s.setName("露露狗");
         ResultJson result = iSfUserService.save(s);
+        backClient(JSON.toJSONString(result));
+    }
+
+    @RequestMapping("/findById")
+    public void findById(@Param("id")String id){
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        BizResult<SfUser> result = iSfUserService.findByID(id);
         backClient(JSON.toJSONString(result));
     }
 

@@ -298,8 +298,6 @@
             <artifactId>bcprov-jdk15</artifactId>
             <version>1.45</version>
         </dependency>
-
-        <!--logback beging-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
