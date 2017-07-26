@@ -25,7 +25,7 @@ public class PropertiesUtils {
     private PropertiesUtils(){
         InputStream is = null;
         try {
-            File file = new File("ssm-service/src/main/resources/jdbc.properties");
+            File file = new File("ssm-service/target/classes/jdbc.properties");
             String path = file.getAbsolutePath();
             is = new FileInputStream(path);
             properties.load(is);
