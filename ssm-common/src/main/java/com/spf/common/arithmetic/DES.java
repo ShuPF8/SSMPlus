@@ -56,7 +56,7 @@ public class DES {
     public static String decryptDESwithBase64(String encryptedString, String decryptKey) {
         String result = null;
         try {
-            byte[] encryptedData = Base64.encodeBase64(encryptedString.getBytes());
+            byte[] encryptedData = Base64.decodeBase64(encryptedString.getBytes());
             result = decryptDES(encryptedData, decryptKey);
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,5 +98,7 @@ public class DES {
         requestMap.put("total_fee","12155");
         String str = DES.encryptDESwithBase64(JSON.toJSONString(requestMap),"4bbd85de");
         System.out.println(str);
+        String str2 = DES.decryptDESwithBase64(str,"4bbd85de");
+        System.out.println(str2);
     }
 }
