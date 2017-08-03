@@ -8,6 +8,7 @@ import com.spf.common.result.BizResult;
 import com.spf.entity.SfUser;
 import com.spf.mapper.SfUserMapper;
 import com.spf.service.ISfUserService;
+import com.spf.service.Single;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public class ISfUserServiceImpl extends ServiceImpl<SfUserMapper, SfUser> implem
     }
 
     public BizResult< List<SfUser>> findAll() {
+        Single s = Single.getInstance();
+        s.getTO();
         BizResult< List<SfUser>> result = new BizResult< List<SfUser>>();
         List<SfUser> list = baseMapper.selectList(new EntityWrapper<SfUser>());
         if (list == null || list.isEmpty()) {
