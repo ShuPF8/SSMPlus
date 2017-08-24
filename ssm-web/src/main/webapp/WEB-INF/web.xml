@@ -76,6 +76,51 @@
     <url-pattern>/wx</url-pattern>
   </servlet-mapping>
 
+  <!--图片验证码-->
+  <servlet>
+    <servlet-name>photoVerity</servlet-name>
+    <servlet-class>com.spf.common.verifyCode.AuthImageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>photoVerity</servlet-name>
+    <url-pattern>/verity</url-pattern>
+  </servlet-mapping>
+
+  <!--极限验证-->
+  <servlet>
+    <servlet-name>StartCaptchaServlet1</servlet-name>
+    <servlet-class>com.spf.common.verifyCode.StartCaptchaServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>VerifyLoginServlet1</servlet-name>
+    <servlet-class>com.spf.common.verifyCode.VerifyLoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>StartCaptchaServlet2</servlet-name>
+    <servlet-class>com.spf.common.verifyCode.StartCaptchaServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>VerifyLoginServlet2</servlet-name>
+    <servlet-class>com.spf.common.verifyCode.VerifyLoginServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>VerifyLoginServlet1</servlet-name>
+    <url-pattern>/gt/ajax-validate1</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StartCaptchaServlet1</servlet-name>
+    <url-pattern>/gt/register1</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>VerifyLoginServlet2</servlet-name>
+    <url-pattern>/gt/ajax-validate2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StartCaptchaServlet2</servlet-name>
+    <url-pattern>/gt/register2</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.ico</url-pattern>

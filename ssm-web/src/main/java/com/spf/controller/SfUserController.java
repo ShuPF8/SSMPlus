@@ -30,6 +30,7 @@ public class SfUserController extends BaseUtils {
 
     @RequestMapping("/findAll")
     public void findAll(){
+        Object jmJson = request.getAttribute("jm");
         log.info("查询所有数据");
         BizResult< List<SfUser>> resultJson = iSfUserService.findAll();
         log.info("查询所有数据---》"+resultJson.getData());
@@ -58,5 +59,4 @@ public class SfUserController extends BaseUtils {
         BizResult<SfUser> result = iSfUserService.findByID(id);
         backClient(JSON.toJSONString(result));
     }
-
 }
