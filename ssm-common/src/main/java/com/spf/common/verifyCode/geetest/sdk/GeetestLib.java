@@ -1,27 +1,12 @@
-package com.spf.common.verifyCode.sdk;
+package com.spf.common.verifyCode.geetest.sdk;
 
-import java.awt.print.Printable;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.GenericArrayType;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Logger;
-
-import javax.print.DocFlavor.STRING;
-import javax.servlet.descriptor.JspConfigDescriptor;
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;

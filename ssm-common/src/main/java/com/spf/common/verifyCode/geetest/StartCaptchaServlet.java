@@ -1,6 +1,6 @@
 package com.spf.common.verifyCode.geetest;
 
-import com.spf.common.verifyCode.sdk.GeetestLib;
+import com.spf.common.verifyCode.geetest.sdk.GeetestLib;
 
 import java.io.IOException;
 import java.io.PrintWriter;
