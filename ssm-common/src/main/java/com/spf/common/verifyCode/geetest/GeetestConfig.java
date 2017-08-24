@@ -1,4 +1,4 @@
-package com.spf.common.verifyCode;
+package com.spf.common.verifyCode.geetest;
 
 import javax.swing.text.StyledEditorKit.BoldAction;
 

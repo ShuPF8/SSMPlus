@@ -89,19 +89,19 @@
   <!--极限验证-->
   <servlet>
     <servlet-name>StartCaptchaServlet1</servlet-name>
-    <servlet-class>com.spf.common.verifyCode.StartCaptchaServlet</servlet-class>
+    <servlet-class>com.spf.common.verifyCode.geetest.StartCaptchaServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>VerifyLoginServlet1</servlet-name>
-    <servlet-class>com.spf.common.verifyCode.VerifyLoginServlet</servlet-class>
+    <servlet-class>com.spf.common.verifyCode.geetest.VerifyLoginServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>StartCaptchaServlet2</servlet-name>
-    <servlet-class>com.spf.common.verifyCode.StartCaptchaServlet</servlet-class>
+    <servlet-class>com.spf.common.verifyCode.geetest.StartCaptchaServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>VerifyLoginServlet2</servlet-name>
-    <servlet-class>com.spf.common.verifyCode.VerifyLoginServlet</servlet-class>
+    <servlet-class>com.spf.common.verifyCode.geetest.VerifyLoginServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

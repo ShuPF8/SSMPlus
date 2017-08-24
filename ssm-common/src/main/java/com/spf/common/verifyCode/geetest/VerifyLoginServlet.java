@@ -1,4 +1,4 @@
-package com.spf.common.verifyCode;
+package com.spf.common.verifyCode.geetest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
