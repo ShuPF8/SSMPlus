@@ -121,6 +121,16 @@
     <url-pattern>/gt/register2</url-pattern>
   </servlet-mapping>
 
+  <!--点触-->
+  <servlet>
+    <servlet-name>captcha</servlet-name>
+    <servlet-class>com.spf.common.verifyCode.captcha.ActivateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>captcha</servlet-name>
+    <url-pattern>/activate.do</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.ico</url-pattern>
